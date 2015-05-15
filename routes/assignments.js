@@ -1,14 +1,45 @@
 var express = require('express');
 var router = express.Router();
 var assignments = require('../models/assignment');
+//var mongoose = require('mongoose');
 
 /* GET /assignments listing. */
+//router.get('/', function(req, res, next) {
+//  assignments.find(function (err, assignments) {
+//    if (err) return next(err);
+//    res.json(assignments);
+//  });
+//});
+
+//router.get('/', function(req, res, next) {
+//    var sortName = req.params.dir || 1;
+//    assignments.find({}, null,
+//      {sort:
+//        {
+//        name: 1//sortName
+//        }
+//      }
+//      , function(err, assignments) {
+//        if (err) {
+//          console.log(err);
+//        }
+//        res.json(assignments);
+//      });
+//});
+
 router.get('/', function(req, res, next) {
-  assignments.find(function (err, assignments) {
-    if (err) return next(err);
-    res.json(assignments);
+  sortName = req.query.q;
+  assignments.find({}, null,
+      {sort:
+        {
+        name: sortName
+        }
+      }
+      , function(err, assignments) {
+        if (err) return next(err);
+        res.json(assignments);
+      });
   });
-});
 
 /* POST /assignments */
 router.post('/', function(req, res, next) {
@@ -19,7 +50,7 @@ router.post('/', function(req, res, next) {
 });
 
 /* GET /assignments/id */
-router.get('/:id', function(req, res, next) {
+router.get('/search/:id', function(req, res, next) {
   assignments.findById(req.params.id, function (err, assignment) {
     if (err) return next(err);
     res.json(assignment);
