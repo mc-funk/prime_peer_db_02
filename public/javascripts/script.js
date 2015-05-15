@@ -11,6 +11,9 @@ var $dateEditor;
 var $editPanel;
 var $editorSubmit;
 
+var thisSort = 1;
+var thisSearch = "";
+
 $(document).ready(function(){
     $container = $('.js-assignments');
     $editPanel = $('.js-editPanel');
@@ -23,15 +26,36 @@ $(document).ready(function(){
     assignClicks();
 
     $('.sort').on("click", function(){
-        getData($(this).data('sort'));
+        thisSort = $(this).data('sort');
+        getData(thisSort, thisSearch);
+        console.log("ThisSort, ThisSearch:", thisSort, thisSearch);
     });
+
+    $('.mySearch').on("click", function() {
+        thisSearch = $("#q").val();
+        console.log("Click worked for " + $("#q").val());
+        getData(thisSort, thisSearch);
+        console.log("ThisSort, ThisSearch:", thisSort, thisSearch);
+    })
 });
 
-function getData(sortDir){
-    var sort = sortDir || 1;
+function getData(sortDir, searchTerm){
+    console.log("getData Called");
+    var sort = "/?q=1";
+    var search;
 
+    if (searchTerm) {
+        search = "&s=" + searchTerm;
+    } else {
+        search = "";
+    }
+
+    if (sortDir) {
+        sort = "/?q=" + sortDir;
+    }
+    console.log("/assignments" + sort + search);
     $.ajax({
-        url: '/assignments?q=' + sort,
+        url: '/assignments' + sort + search,
         data: {},
         method: 'get',
         dataType: 'json',

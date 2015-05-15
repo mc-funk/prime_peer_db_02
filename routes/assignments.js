@@ -29,7 +29,8 @@ var assignments = require('../models/assignment');
 
 router.get('/', function(req, res, next) {
   sortName = req.query.q;
-  assignments.find({}, null,
+
+  assignments.find({name: new RegExp(req.query.s, 'i')}, null,
       {sort:
         {
         name: sortName
@@ -50,12 +51,19 @@ router.post('/', function(req, res, next) {
 });
 
 /* GET /assignments/id */
-router.get('/search/:id', function(req, res, next) {
+router.get('search/:id', function(req, res, next) {
   assignments.findById(req.params.id, function (err, assignment) {
     if (err) return next(err);
     res.json(assignment);
   });
 });
+
+//router.get('search/', function(req, res, next) {
+//  assignments.find(req.query.q, function (err, assignment) {
+//    if (err) return next(err);
+//    res.json(assignment);
+//  });
+//});
 
 /* PUT /assignments/:id */
 router.put('/:id', function(req, res, next) {
